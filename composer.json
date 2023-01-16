@@ -1,0 +1,22 @@
+{
+  "name": "cadrien/bulma-bridge",
+  "description": "Bulma integration for Twig",
+  "type": "symfony-bridge",
+  "authors": [
+    {
+      "name": "Adrien CHAUMARAT",
+      "email": "adrien.chaumarat@gmail.com"
+    }
+  ],
+  "homepage": "https://cadrien.fr",
+  "require": {
+    "twig/twig": "^2.13|^3.0.4"
+  },
+  "autoload": {
+    "psr-4": { "Symfony\\Bridge\\Twig\\": "" },
+    "exclude-from-classmap": [
+      "/Tests/"
+    ]
+  },
+  "minimum-stability": "dev"
+}
