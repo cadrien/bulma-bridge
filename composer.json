@@ -2,6 +2,7 @@
   "name": "cadrien/bulma-bridge",
   "description": "Bulma integration for Twig",
   "type": "symfony-bridge",
+  "license": "GPL-3.0-only",
   "authors": [
     {
       "name": "Adrien CHAUMARAT",
