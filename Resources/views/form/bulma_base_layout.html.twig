@@ -145,6 +145,12 @@
     {%- endif -%}
 {%- endblock dateinterval_widget -%}
 
+{%- block choice_widget_collapsed -%}
+    <div {% with {attr: row_attr|merge({class: (row_attr.class|default('') ~ ' select is-fullwidth')|trim})} %}{{ block('widget_container_attributes') }}{% endwith %} {{ block('widget_container_attributes') }}>
+        {{- parent() -}}
+    </div>
+{% endblock choice_widget_collapsed %}
+
 {% block choice_widget_expanded -%}
     {%- if '-inline' in label_attr.class|default('') -%}
         {%- for child in form %}
@@ -184,7 +190,7 @@
 {# Rows #}
 
 {% block button_row -%}
-    <div{% with {attr: row_attr|merge({class: (row_attr.class|default('') ~ ' control')|trim})} %}{{ block('attributes') }}{% endwith %}>
+    <div {% with {attr: row_attr|merge({class: (row_attr.class|default('') ~ ' control')|trim})} %}{{ block('attributes') }}{% endwith %}>
         {{- form_widget(form) -}}
     </div>
 {%- endblock button_row %}
