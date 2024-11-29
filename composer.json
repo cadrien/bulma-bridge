@@ -6,10 +6,10 @@
   "authors": [
     {
       "name": "Adrien CHAUMARAT",
-      "email": "adrien.chaumarat@gmail.com"
+      "email": "contact@ardn.tech"
     }
   ],
-  "homepage": "https://cadrien.fr",
+  "homepage": "https://ardn.tech",
   "require": {
     "twig/twig": "^2.13|^3.0.4"
   },
