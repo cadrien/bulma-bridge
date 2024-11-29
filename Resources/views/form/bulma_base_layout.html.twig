@@ -146,7 +146,7 @@
 {%- endblock dateinterval_widget -%}
 
 {%- block choice_widget_collapsed -%}
-    <div {% with {attr: row_attr|merge({class: (row_attr.class|default('') ~ ' select is-fullwidth')|trim})} %}{{ block('widget_container_attributes') }}{% endwith %}>
+    <div {% with {attr: row_attr|merge({class: (row_attr.class|default('') ~ ' select is-fullwidth' ~ (multiple ? ' is-multiple'))|trim})} %}{{ block('widget_container_attributes') }}{% endwith %}>
         {{- parent() -}}
     </div>
 {% endblock choice_widget_collapsed %}
