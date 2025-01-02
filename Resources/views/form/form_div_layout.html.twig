@@ -10,14 +10,18 @@
 
 {%- block form_widget_simple -%}
     <div class="control">
-        {%- set type = type|default('text') -%}
-        {%- if type == 'range' or type == 'color' -%}
-            {# Attribute "required" is not supported #}
-            {%- set required = false -%}
-        {%- endif -%}
-        <input type="{{ type }}" {{ block('widget_attributes') }} {% if value is not empty %}value="{{ value }}" {% endif %}/>
+        {{- block('form_widget_very_simple') -}}
     </div>
 {%- endblock form_widget_simple -%}
+
+{%- block form_widget_very_simple -%}
+    {%- set type = type|default('text') -%}
+    {%- if type == 'range' or type == 'color' -%}
+        {# Attribute "required" is not supported #}
+        {%- set required = false -%}
+    {%- endif -%}
+    <input type="{{ type }}" {{ block('widget_attributes') }} {% if value is not empty %}value="{{ value }}" {% endif %} />
+{%- endblock form_widget_very_simple -%}
 
 {%- block form_widget_compound -%}
     <div {{ block('widget_container_attributes') }}>
