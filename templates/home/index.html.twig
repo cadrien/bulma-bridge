@@ -28,10 +28,9 @@
                     <li>Paramétrer la librairie dans votre fichier <code>config/packages/twig.yaml</code> :
                         <code>
                         <xmp>
-                            # config/packages/twig.yaml
-                            paths:
-                                - 'vendor/cadrien/bulma-bridge/'
-                            form_themes: [ 'Resources/views/form/bulma_1_layout.html.twig' ]
+paths:
+    - 'vendor/cadrien/bulma-bridge/'
+form_themes: [ 'Resources/views/form/bulma_1_layout.html.twig' ]
                         </xmp>
                         </code>
                     </li>
@@ -45,7 +44,32 @@
         <div class="container">
             <div class="content">
                 <h3 class="subtitle">Example de champs</h3>
-                {{ form(form) }}
+                <div class="columns">
+                    <div class="column">
+                        <h4 class="subtitle">Layout</h4>
+                        <code>
+                            <xmp>
+# config/packages/twig.yaml
+paths:
+    - 'vendor/cadrien/bulma-bridge/'
+form_themes: [ 'Resources/views/form/bulma_1_layout.html.twig' ]
+                            </xmp>
+                        </code>
+                        <a class="button is-link" href="{{ path(constant('App\\Controller\\HomeController::ROUTE_EXAMPLE_LAYOUT')) }}">Voir le rendu</a>
+                    </div>
+                    <div class="column">
+                        <h4 class="subtitle">Horizontal</h4>
+                        <code>
+                            <xmp>
+# config/packages/twig.yaml
+paths:
+    - 'vendor/cadrien/bulma-bridge/'
+form_themes: [ 'Resources/views/form/bulma_1_horizontal_layout.html.twig' ]
+                            </xmp>
+                        </code>
+                        <a class="button is-link" href="{{ path(constant('App\\Controller\\HomeController::ROUTE_EXAMPLE_HORIZONTAL')) }}">Voir le rendu</a>
+                    </div>
+                </div>
             </div>
         </div>
     </section>
