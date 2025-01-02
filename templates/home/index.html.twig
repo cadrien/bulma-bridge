@@ -1,0 +1,76 @@
+{# templates/home.html.twig #}
+{% extends 'base.html.twig' %}
+
+{% block title %}Bulma Bridge{% endblock %}
+
+{% block body %}
+    <section class="hero is-primary">
+        <div class="hero-body">
+            <div class="container">
+                <h1 class="title">
+                    Bulma Bridge
+                </h1>
+                <h2 class="subtitle">
+                    Comment intégrer le framework Bulma dans les formulaires Symfony Symfony
+                </h2>
+            </div>
+        </div>
+    </section>
+
+    <section class="section">
+        <div class="container">
+            <div class="content">
+                <h3 class="subtitle">Installation</h3>
+                <p>Pour intégrer Bulma dans les formulaires d'un projet Symfony, suivez ces étapes simples :</p>
+                <ol>
+                    <li>Incluez le CDN de Bulma dans votre fichier <code>base.html.twig</code> ou importer le via un gestionnaire de paquet (yarn / npm / etc).</li>
+                    <li>Installer la librairie bulma-bridge <code>composer require cadrien/bulma-bridge</code></li>
+                    <li>Paramétrer la librairie dans votre fichier <code>config/packages/twig.yaml</code> :
+                        <code>
+                        <xmp>
+paths:
+    - 'vendor/cadrien/bulma-bridge/'
+form_themes: [ 'Resources/views/form/bulma_1_layout.html.twig' ]
+                        </xmp>
+                        </code>
+                    </li>
+                    <li>Profitez des composants et des utilitaires de Bulma pour créer des interfaces utilisateur modernes et réactives.</li>
+                </ol>
+            </div>
+        </div>
+    </section>
+
+    <section class="section">
+        <div class="container">
+            <div class="content">
+                <h3 class="subtitle">Example de champs</h3>
+                <div class="columns">
+                    <div class="column">
+                        <h4 class="subtitle">Layout</h4>
+                        <code>
+                            <xmp>
+# config/packages/twig.yaml
+paths:
+    - 'vendor/cadrien/bulma-bridge/'
+form_themes: [ 'Resources/views/form/bulma_1_layout.html.twig' ]
+                            </xmp>
+                        </code>
+                        <a class="button is-link" href="{{ path(constant('App\\Controller\\HomeController::ROUTE_EXAMPLE_LAYOUT')) }}">Voir le rendu</a>
+                    </div>
+                    <div class="column">
+                        <h4 class="subtitle">Horizontal</h4>
+                        <code>
+                            <xmp>
+# config/packages/twig.yaml
+paths:
+    - 'vendor/cadrien/bulma-bridge/'
+form_themes: [ 'Resources/views/form/bulma_1_horizontal_layout.html.twig' ]
+                            </xmp>
+                        </code>
+                        <a class="button is-link" href="{{ path(constant('App\\Controller\\HomeController::ROUTE_EXAMPLE_HORIZONTAL')) }}">Voir le rendu</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+{% endblock %}

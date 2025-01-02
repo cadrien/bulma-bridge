@@ -1,0 +1,30 @@
+{# templates/home.html.twig #}
+{% extends 'base.html.twig' %}
+
+{% block title %}Bulma Bridge{% endblock %}
+
+{% block body %}
+    <section class="hero is-primary">
+        <div class="hero-body">
+            <div class="container">
+                <h1 class="title">
+                    <a class="has-text-black mr-5" href="{{ path(constant('App\\Controller\\HomeController::ROUTE_HOME')) }}"><i class="fa fa-home"></i></a>
+                    Layout
+                </h1>
+                <h2 class="subtitle">
+                    Exemples de formulaire layout
+                </h2>
+                <a class="button is-link is-light" href="{{ path(constant('App\\Controller\\HomeController::ROUTE_EXAMPLE_HORIZONTAL')) }}">Voir la version horizontale</a>
+            </div>
+        </div>
+    </section>
+
+    <section class="section">
+        <div class="container">
+            <div class="content">
+                <h3 class="subtitle">Example de champs</h3>
+                {{ form(form) }}
+            </div>
+        </div>
+    </section>
+{% endblock %}
