@@ -18,7 +18,7 @@
 {%- endblock form_label %}
 
 {% block form_label_class %}
-    is-2
+    column is-2
 {%- endblock form_label_class %}
 
 {# Rows #}
@@ -36,7 +36,7 @@
         {%- set is_input_group = is_input_group|default('input-group' in row_class) -%}
         {#- Remove behavior class from the main container -#}
         {%- set row_class = row_class|replace({'form-floating': '', 'input-group': ''}) -%}
-        <div{% with {attr: row_attr|merge({class: (row_class ~ ' field' ~ ((not compound or force_error|default(false)) and not valid ? ' is-danger'))|trim})} %}{{ block('attributes') }}{% endwith %}>
+        <div{% with {attr: row_attr|merge({class: (row_class ~ ' columns field' ~ ((not compound or force_error|default(false)) and not valid ? ' is-danger'))|trim})} %}{{ block('attributes') }}{% endwith %}>
             {%- if is_form_floating or is_input_group -%}
                 <div class="{{ block('form_label_class') }}"></div>
                 <div class="{{ block('form_group_class') }}">
@@ -126,5 +126,5 @@
 {%- endblock checkbox_row %}
 
 {% block form_group_class %}
-    is-10
+    column is-10
 {%- endblock form_group_class %}
