@@ -1,6 +1,15 @@
 {
-    "type": "project",
-    "license": "proprietary",
+    "name": "cadrien/bulma-bridge",
+    "description": "Bulma integration for Twig",
+    "type": "symfony-bridge",
+    "license": "GPL-3.0-only",
+    "authors": [
+        {
+            "name": "Adrien CHAUMARAT",
+            "email": "contact@ardn.tech"
+        }
+    ],
+    "homepage": "https://ardn.tech",
     "minimum-stability": "stable",
     "prefer-stable": true,
     "require": {
