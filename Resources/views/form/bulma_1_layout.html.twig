@@ -254,7 +254,6 @@
 {%- endblock radio_widget %}
 
 {%- block choice_widget_collapsed -%}
-    {%- set attr = attr|merge({class: (attr.class|default('') ~ ' select')|trim}) -%}
     {{- parent() -}}
 {%- endblock choice_widget_collapsed %}
 
