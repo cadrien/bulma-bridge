@@ -296,6 +296,63 @@
     {%- endif -%}
 {%- endblock week_widget -%}
 
+{% block text_group_widget %}
+    {% if label_left is not defined %}
+        {% set label_left = attribute(form.vars, constant('App\\Form\\TextGroupType::LABEL_LEFT')) %}
+    {% endif %}
+    {% if label_right is not defined %}
+        {% set label_right = attribute(form.vars, constant('App\\Form\\TextGroupType::LABEL_RIGHT')) %}
+    {% endif %}
+    {% if class_left is not defined %}
+        {% set class_left = attribute(form.vars, constant('App\\Form\\TextGroupType::CLASS_LEFT')) %}
+    {% endif %}
+    {% if class_right is not defined %}
+        {% set class_right = attribute(form.vars, constant('App\\\Form\\TextGroupType::CLASS_RIGHT')) %}
+    {% endif %}
+    {% if label_left is not null or label_right is not null %}
+        <div class="control{{ label_left is not null ? ' has-icons-left' }}{{ label_right is not null ? ' has-icons-right' }}">
+            {{ block('form_widget_simple') }}
+            {% if label_left is not null %}
+                <span class="icon is-small is-left {{ class_left }}">{{ label_left | raw }}</span>
+            {% endif %}
+            {% if label_right is not null %}
+                <span class="icon is-small is-right {{ class_right }}">{{ label_right | raw }}</span>
+            {% endif %}
+        </div>
+    {% else %}
+        {{ block('form_widget_simple') }}
+    {% endif %}
+{% endblock text_group_widget %}
+
+{% block password_group_widget %}
+    {% if label_left is not defined %}
+        {% set label_left = attribute(form.vars, constant('App\\Extension\\Form\\PasswordGroupType::LABEL_LEFT')) %}
+    {% endif %}
+    {% if label_right is not defined %}
+        {% set label_right = attribute(form.vars, constant('App\\Extension\\Form\\PasswordGroupType::LABEL_RIGHT')) %}
+    {% endif %}
+    {% if class_left is not defined %}
+        {% set class_left = attribute(form.vars, constant('App\\Extension\\Form\\PasswordGroupType::CLASS_LEFT')) %}
+    {% endif %}
+    {% if class_right is not defined %}
+        {% set class_right = attribute(form.vars, constant('App\\Extension\\Form\\PasswordGroupType::CLASS_RIGHT')) %}
+    {% endif %}
+    {% set attr = attr|merge({type: 'password'}) -%}
+    {% if label_left is not null or label_right is not null %}
+        <div class="control{{ label_left is not null ? ' has-icons-left' }}{{ label_right is not null ? ' has-icons-right' }}">
+            {{ block('password_widget') }}
+            {% if label_left is not null %}
+                <span class="icon is-small is-left {{ class_left }}">{{ label_left | raw }}</span>
+            {% endif %}
+            {% if label_right is not null %}
+                <span class="icon is-small is-right {{ class_right }}">{{ label_right | raw }}</span>
+            {% endif %}
+        </div>
+    {% else %}
+        {{ block('password_widget') }}
+    {% endif %}
+{% endblock password_group_widget %}
+
 {# Labels #}
 
 {% block form_label %}
