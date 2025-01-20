@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Controller;
+namespace Cadrien\BulmaBridge\Controller;
 
-use App\Form\ExampleType;
+use Cadrien\BulmaBridge\Form\ExampleType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
