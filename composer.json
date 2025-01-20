@@ -38,12 +38,12 @@
     },
     "autoload": {
         "psr-4": {
-            "App\\": "src/"
+            "Cadrien\\BulmaBridge\\": "src/"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "App\\Tests\\": "tests/"
+            "Cadrien\\BulmaBridge\\Tests\\": "tests/"
         }
     },
     "scripts": {
