@@ -25,10 +25,6 @@ use Symfony\Component\Form\Extension\Core\Type\LocaleType;
 use Symfony\Component\Form\Extension\Core\Type\TimezoneType;
 use Symfony\Component\Form\Extension\Core\Type\CurrencyType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
-use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
-use Symfony\Component\Form\Extension\Core\Type\RadioType;
-use Symfony\Component\Form\Extension\Core\Type\ButtonType;
-use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -122,6 +118,13 @@ class ExampleType extends AbstractType
                     'Option 2' => 'option2',
                     'Option 3' => 'option3',
                 ]
+            ])
+            ->add('select2', Select2Type::class, [
+                'choices' => [
+                    'Option 1' => 'option1',
+                    'Option 2' => 'option2',
+                    'Option 3' => 'option3',
+                ],
             ])
         ;
     }
