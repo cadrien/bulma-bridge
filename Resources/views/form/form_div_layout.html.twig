@@ -353,6 +353,11 @@
     {% endif %}
 {% endblock password_group_widget %}
 
+{% block select2_widget %}
+    {{ block('choice_widget') }}
+    {{ attribute(form.vars.attr, constant('Cadrien\\BulmaBridge\\Form\\Select2Type::VIEW_ATTR_SCRIPT'))|raw }}
+{% endblock %}
+
 {# Labels #}
 
 {% block form_label %}
