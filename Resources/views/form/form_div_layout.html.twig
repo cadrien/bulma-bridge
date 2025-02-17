@@ -356,7 +356,17 @@
 {% block select2_widget %}
     {{ block('choice_widget') }}
     {{ attribute(form.vars.attr, constant('Cadrien\\BulmaBridge\\Form\\Select2Type::VIEW_ATTR_SCRIPT'))|raw }}
-{% endblock %}
+{% endblock select2_widget %}
+
+{% block wysiwyg_quill_widget %}
+    <div id="{{ attribute(form.vars.attr, constant('Cadrien\\BulmaBridge\\Form\\WysiwygQuillType::VIEW_ATTR_DIV_ID')) }}" class="has-background-white" style="height: 20vh">
+        {{ form.vars.data|raw }}
+    </div>
+    <div class="is-hidden">
+        {{ form_widget(form) }}
+    </div>
+    {{ attribute(form.vars.attr, constant('Cadrien\\BulmaBridge\\Form\\WysiwygQuillType::VIEW_ATTR_SCRIPT'))|raw }}
+{% endblock wysiwyg_quill_widget %}
 
 {# Labels #}
 

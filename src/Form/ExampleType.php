@@ -54,6 +54,7 @@ class ExampleType extends AbstractType
         $builder
             ->add('textField', TextType::class)
             ->add('textareaField', TextareaType::class)
+            ->add('wysiwygQuillField', WysiwygQuillType::class)
             ->add('emailField', EmailType::class)
             ->add('integerField', IntegerType::class)
             ->add('moneyField', MoneyType::class)
