@@ -16,6 +16,7 @@
         "php": ">=8.2",
         "ext-ctype": "*",
         "ext-iconv": "*",
+        "ehyiah/ux-quill": "^2.0",
         "phpdocumentor/reflection-docblock": "^5.6",
         "symfony/flex": "^2.4",
         "symfony/form": "7.2.*",
