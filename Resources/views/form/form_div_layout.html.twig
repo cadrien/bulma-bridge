@@ -359,10 +359,10 @@
 {% endblock select2_widget %}
 
 {% block wysiwyg_quill_widget %}
-    <div id="{{ attribute(form.vars.attr, constant('Cadrien\\BulmaBridge\\Form\\WysiwygQuillType::VIEW_ATTR_DIV_ID')) }}" class="has-background-white" style="height: 20vh">
+    <div id="{{ attribute(form.vars.attr, constant('Cadrien\\BulmaBridge\\Form\\WysiwygQuillType::VIEW_ATTR_DIV_ID')) }}" class="has-background-white" style="height: {{ attribute(form.vars.attr, constant('Cadrien\\BulmaBridge\\Form\\WysiwygQuillType::OPTION_HEIGHT')) }}">
         {{ form.vars.data|raw }}
     </div>
-    <div class="is-hidden">
+    <div style="display: none !important;">
         {{ form_widget(form) }}
     </div>
     {{ attribute(form.vars.attr, constant('Cadrien\\BulmaBridge\\Form\\WysiwygQuillType::VIEW_ATTR_SCRIPT'))|raw }}

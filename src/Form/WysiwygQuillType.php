@@ -12,8 +12,10 @@ class WysiwygQuillType extends AbstractType
 {
     // region constants
     public const DEFAULT_CLASS = 'quill';
+    public const DEFAULT_HEIGHT = '20vh';
     public const VIEW_ATTR_SCRIPT = 'view_attr_script';
     public const VIEW_ATTR_DIV_ID = 'view_attr_div_id';
+    public const OPTION_HEIGHT = 'option_height';
     // endregion
 
     // region public attributes
@@ -42,7 +44,8 @@ class WysiwygQuillType extends AbstractType
         parent::configureOptions($resolver);
 
         $resolver->setDefaults([
-            'attr' => ['class' => self::DEFAULT_CLASS],
+            'attr' => [ 'class' => self::DEFAULT_CLASS, ],
+            self::OPTION_HEIGHT => self::DEFAULT_HEIGHT,
         ]);
     }
 
@@ -68,6 +71,7 @@ class WysiwygQuillType extends AbstractType
                 });
             </script>';
         $view->vars['attr'][self::VIEW_ATTR_DIV_ID] = $divIdentifier;
+        $view->vars['attr'][self::OPTION_HEIGHT] = $options[self::OPTION_HEIGHT];
     }
     // endregion
 
