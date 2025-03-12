@@ -55,7 +55,8 @@ class WysiwygQuillType extends AbstractType
 
         $textareaIdentifier = $view->vars['id'];
         $divIdentifier = sprintf('%s_div', $textareaIdentifier);
-        $view->vars['attr'][self::VIEW_ATTR_SCRIPT] = '
+        if (!($view->vars['disabled'] ?? false)) {
+            $view->vars['attr'][self::VIEW_ATTR_SCRIPT] = '
             <script type="text/javascript">
                 document.addEventListener("DOMContentLoaded", function() {
                     let textareaElement = document.getElementById("'.$textareaIdentifier.'");
@@ -70,6 +71,7 @@ class WysiwygQuillType extends AbstractType
                     }
                 });
             </script>';
+        }
         $view->vars['attr'][self::VIEW_ATTR_DIV_ID] = $divIdentifier;
         $view->vars['attr'][self::OPTION_HEIGHT] = $options[self::OPTION_HEIGHT];
     }

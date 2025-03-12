@@ -359,13 +359,18 @@
 {% endblock select2_widget %}
 
 {% block wysiwyg_quill_widget %}
-    <div id="{{ attribute(form.vars.attr, constant('Cadrien\\BulmaBridge\\Form\\WysiwygQuillType::VIEW_ATTR_DIV_ID')) }}" class="has-background-white" style="height: {{ attribute(form.vars.attr, constant('Cadrien\\BulmaBridge\\Form\\WysiwygQuillType::OPTION_HEIGHT')) }}">
-        {{ form.vars.data|raw }}
-    </div>
-    <div style="display: none !important;">
+    {% set disabled = form.vars.disabled|default(false) %}
+    {% if not disabled %}
+        <div id="{{ attribute(form.vars.attr, constant('Cadrien\\BulmaBridge\\Form\\WysiwygQuillType::VIEW_ATTR_DIV_ID')) }}" class="has-background-white" style="height: {{ attribute(form.vars.attr, constant('Cadrien\\BulmaBridge\\Form\\WysiwygQuillType::OPTION_HEIGHT')) }}">
+            {{ form.vars.data|raw }}
+        </div>
+        <div style="display: none !important;">
+            {{ form_widget(form) }}
+        </div>
+        {{ attribute(form.vars.attr, constant('Cadrien\\BulmaBridge\\Form\\WysiwygQuillType::VIEW_ATTR_SCRIPT'))|default('')|raw }}
+    {% else %}
         {{ form_widget(form) }}
-    </div>
-    {{ attribute(form.vars.attr, constant('Cadrien\\BulmaBridge\\Form\\WysiwygQuillType::VIEW_ATTR_SCRIPT'))|raw }}
+    {% endif %}
 {% endblock wysiwyg_quill_widget %}
 
 {# Labels #}
