@@ -213,7 +213,6 @@
     {%- set row_class = '' -%}
     {%- if 'checkbox' not in attr_class -%}
         {%- set attr_class = attr_class ~ ' checkbox' -%}
-        {%- set row_class = 'control' -%}
     {%- endif -%}
     {%- set attr = attr|merge({class: attr_class|trim}) -%}
     {%- set parent_label_class = parent_label_class|default(label_attr.class|default('')) -%}
@@ -237,7 +236,6 @@
     {%- set row_class = '' -%}
     {%- if 'radio' not in attr_class -%}
         {%- set attr_class = attr_class ~ ' radio' -%}
-        {%- set row_class = 'control' -%}
     {%- endif -%}
     {%- set attr = attr|merge({class: attr_class|trim}) -%}
     {%- set parent_label_class = parent_label_class|default(label_attr.class|default('')) -%}
@@ -259,6 +257,32 @@
 
 {%- block choice_widget_expanded -%}
     <div {{ block('widget_container_attributes') }}>
+        {%- set radio_count = 0 %}
+        {%- set checkbox_count = 0 %}
+        {%- set is_radio = false %}
+        {%- set is_checkbox = true %}
+
+        {%- for child in form %}
+            {% if 'radio' in child.vars.block_prefixes %}
+                {% set radio_count = radio_count + 1 %}
+            {% elseif 'checkbox' in child.vars.block_prefixes %}
+                {% set checkbox_count = checkbox_count + 1 %}
+            {% endif %}
+        {% endfor -%}
+
+        {% if radio_count > 0 %}
+            {% set is_radio = true %}
+        {% endif %}
+        {% if checkbox_count > 0 %}
+            {% set is_checkbox = true %}
+        {% endif %}
+
+        {% if is_radio %}
+            <div class="radios">
+        {% elseif is_checkbox %}
+            <div class="checkboxes">
+        {% endif %}
+
         {%- for child in form %}
             {{- form_widget(child, {
                 parent_label_class: label_attr.class|default(''),
@@ -266,6 +290,9 @@
                 valid: valid,
             }) -}}
         {% endfor -%}
+        {% if is_radio or is_checkbox %}
+            </div>
+        {% endif %}
     </div>
 {%- endblock choice_widget_expanded %}
 
