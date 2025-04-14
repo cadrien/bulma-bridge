@@ -251,10 +251,6 @@
     {%- endif -%}
 {%- endblock radio_widget %}
 
-{%- block choice_widget_collapsed -%}
-    {{- parent() -}}
-{%- endblock choice_widget_collapsed %}
-
 {%- block choice_widget_expanded -%}
     <div {{ block('widget_container_attributes') }}>
         {%- set radio_count = 0 %}

@@ -59,7 +59,7 @@
     {%- if required and placeholder is none and not placeholder_in_choices and not multiple and (attr.size is not defined or attr.size <= 1) -%}
         {% set required = false %}
     {%- endif -%}
-    <div class="select is-fullwidth{{ multiple ? ' is-multiple' }} {{ attr.class|default('') }}">
+    <div class="select is-fullwidth{{ multiple ? ' is-multiple' }} {{ attr.class|default('') }} {{ errors|length ? ' is-danger' }}">
         {% set attr = attr | filter((v, k) => k != 'class') %}
         <select {{ block('widget_attributes') }}{% if multiple %} multiple="multiple"{% endif %}>
             {%- if placeholder is not none -%}
