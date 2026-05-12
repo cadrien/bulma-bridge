@@ -16,7 +16,6 @@
         "php": ">=8.2",
         "ext-ctype": "*",
         "ext-iconv": "*",
-        "ehyiah/ux-quill": "^2.0",
         "phpdocumentor/reflection-docblock": "^5.6",
         "symfony/flex": "^2.4",
         "symfony/form": "^7.2|^8.0",
@@ -27,6 +26,9 @@
         "symfony/yaml": "^7.2|^8.0",
         "twig/extra-bundle": "^2.12|^3.0",
         "twig/twig": "^2.12|^3.0"
+    },
+    "suggest": {
+        "ehyiah/ux-quill": "Required only if you use WysiwygQuillType with the Symfony UX Quill integration (^2.0). Alternatively, load Quill via CDN."
     },
     "config": {
         "allow-plugins": {
@@ -68,6 +70,7 @@
         }
     },
     "require-dev": {
+        "ehyiah/ux-quill": "^2.0",
         "symfony/browser-kit": "^7.2|^8.0",
         "symfony/css-selector": "^7.2|^8.0",
         "symfony/debug-bundle": "^7.2|^8.0",
