@@ -2,24 +2,22 @@
 
 {# Widgets #}
 
-{% block textarea_widget -%}
-    <div class="control">
-        {% set attr = attr|merge({class: (attr.class|default('') ~ ' textarea')|trim}) %}
-        {{- parent() -}}
-    </div>
+{% block textarea_widget %}
+    {% set attr = attr|merge({class: (attr.class|default('') ~ ' textarea')|trim}) %}
+    {{- parent() -}}
 {%- endblock textarea_widget %}
 
-{% block money_widget -%}
+{% block money_widget %}
     {% set prepend = not (money_pattern starts with '{{') %}
     {% set append = not (money_pattern ends with '}}') %}
     {% if prepend or append %}
-        <div class="input-group{{ group_class|default('') }}">
+        <div class="control has-icons-left has-icons-right">
             {% if prepend %}
-                <span class="input-group-addon">{{ money_pattern|form_encode_currency }}</span>
+                <span class="icon is-small is-left">{{ money_pattern|form_encode_currency }}</span>
             {% endif %}
             {{- block('form_widget_simple') -}}
             {% if append %}
-                <span class="input-group-addon">{{ money_pattern|form_encode_currency }}</span>
+                <span class="icon is-small is-right">{{ money_pattern|form_encode_currency }}</span>
             {% endif %}
         </div>
     {% else %}
@@ -27,22 +25,22 @@
     {% endif %}
 {%- endblock money_widget %}
 
-{% block percent_widget -%}
+{% block percent_widget %}
     {%- if symbol -%}
-        <div class="input-group">
+        <div class="control has-icons-right">
             {{- block('form_widget_simple') -}}
-            <span class="input-group-addon">{{ symbol|default('%') }}</span>
+            <span class="icon is-small is-right">{{ symbol|default('%') }}</span>
         </div>
     {%- else -%}
         {{- block('form_widget_simple') -}}
     {%- endif -%}
 {%- endblock percent_widget %}
 
-{% block datetime_widget -%}
+{% block datetime_widget %}
     {%- if widget == 'single_text' -%}
         {{- block('form_widget_simple') -}}
     {%- else -%}
-        {% set attr = attr|merge({class: (attr.class|default('') ~ ' form-inline')|trim}) -%}
+        {% set attr = attr|merge({class: (attr.class|default('') ~ ' is-inline')|trim}) -%}
         <div {{ block('widget_container_attributes') }}>
             {{- form_errors(form.date) -}}
             {{- form_errors(form.time) -}}
@@ -62,11 +60,11 @@
     {%- endif -%}
 {%- endblock datetime_widget %}
 
-{% block date_widget -%}
+{% block date_widget %}
     {%- if widget == 'single_text' -%}
         {{- block('form_widget_simple') -}}
     {%- else -%}
-        {%- set attr = attr|merge({class: (attr.class|default('') ~ ' form-inline')|trim}) -%}
+        {%- set attr = attr|merge({class: (attr.class|default('') ~ ' is-inline')|trim}) -%}
         {%- if datetime is not defined or not datetime -%}
             <div {{ block('widget_container_attributes') -}}>
         {%- endif %}
@@ -78,22 +76,22 @@
             </div>
         {%- endif -%}
 
-            {{- date_pattern|replace({
-                '{{ year }}': form_widget(form.year),
-                '{{ month }}': form_widget(form.month),
-                '{{ day }}': form_widget(form.day),
-            })|raw -}}
+        {{- date_pattern|replace({
+            '{{ year }}': form_widget(form.year),
+            '{{ month }}': form_widget(form.month),
+            '{{ day }}': form_widget(form.day),
+        })|raw -}}
         {%- if datetime is not defined or not datetime -%}
             </div>
         {%- endif -%}
     {%- endif -%}
 {%- endblock date_widget %}
 
-{% block time_widget -%}
+{% block time_widget %}
     {%- if widget == 'single_text' -%}
         {{- block('form_widget_simple') -}}
     {%- else -%}
-        {%- set attr = attr|merge({class: (attr.class|default('') ~ ' form-inline')|trim}) -%}
+        {%- set attr = attr|merge({class: (attr.class|default('') ~ ' is-inline')|trim}) -%}
         {%- if datetime is not defined or false == datetime -%}
             <div {{ block('widget_container_attributes') -}}>
         {%- endif -%}
@@ -111,11 +109,11 @@
     {%- if widget == 'single_text' -%}
         {{- block('form_widget_simple') -}}
     {%- else -%}
-        {%- set attr = attr|merge({class: (attr.class|default('') ~ ' form-inline')|trim}) -%}
+        {%- set attr = attr|merge({class: (attr.class|default('') ~ ' is-inline')|trim}) -%}
         <div {{ block('widget_container_attributes') }}>
             {{- form_errors(form) -}}
-            <div class="table-responsive">
-                <table class="table {{ table_class|default('table-bordered table-condensed table-striped') }}" role="presentation">
+            <div class="table-container">
+                <table class="table {{ table_class|default('is-bordered is-striped is-narrow is-hoverable is-fullwidth') }}" role="presentation">
                     <thead>
                     <tr>
                         {%- if with_years %}<th>{{ form_label(form.years) }}</th>{% endif -%}
@@ -145,13 +143,7 @@
     {%- endif -%}
 {%- endblock dateinterval_widget -%}
 
-{%- block choice_widget_collapsed -%}
-    <div {% with {attr: row_attr|merge({class: (row_attr.class|default('') ~ ' select is-fullwidth' ~ (multiple ? ' is-multiple'))|trim})} %}{{ block('widget_container_attributes') }}{% endwith %}>
-        {{- parent() -}}
-    </div>
-{% endblock choice_widget_collapsed %}
-
-{% block choice_widget_expanded -%}
+{% block choice_widget_expanded %}
     {%- if '-inline' in label_attr.class|default('') -%}
         {%- for child in form %}
             {{- form_widget(child, {
@@ -173,44 +165,44 @@
 
 {# Labels #}
 
-{% block choice_label -%}
+{% block choice_label %}
     {# remove the checkbox-inline and radio-inline class, it's only useful for embed labels #}
     {%- set label_attr = label_attr|merge({class: label_attr.class|default('')|replace({'checkbox-inline': '', 'radio-inline': '', 'checkbox-custom': '', 'radio-custom': '', 'switch-custom': ''})|trim}) -%}
     {{- block('form_label') -}}
 {% endblock choice_label %}
 
-{% block checkbox_label -%}
+{% block checkbox_label %}
     {{- block('checkbox_radio_label') -}}
 {%- endblock checkbox_label %}
 
-{% block radio_label -%}
+{% block radio_label %}
     {{- block('checkbox_radio_label') -}}
 {%- endblock radio_label %}
 
 {# Rows #}
 
-{% block button_row -%}
-    <div {% with {attr: row_attr|merge({class: (row_attr.class|default('') ~ ' control')|trim})} %}{{ block('attributes') }}{% endwith %}>
+{% block button_row %}
+    <div{% with {attr: row_attr|merge({class: (row_attr.class|default('') ~ ' field')|trim})} %}{{ block('attributes') }}{% endwith %}>
         {{- form_widget(form) -}}
     </div>
 {%- endblock button_row %}
 
-{% block choice_row -%}
+{% block choice_row %}
     {%- set force_error = true -%}
     {{- block('form_row') -}}
 {%- endblock choice_row %}
 
-{% block date_row -%}
+{% block date_row %}
     {%- set force_error = true -%}
     {{- block('form_row') -}}
 {%- endblock date_row %}
 
-{% block time_row -%}
+{% block time_row %}
     {%- set force_error = true -%}
     {{- block('form_row') -}}
 {%- endblock time_row %}
 
-{% block datetime_row -%}
+{% block datetime_row %}
     {%- set force_error = true -%}
     {{- block('form_row') -}}
 {%- endblock datetime_row %}

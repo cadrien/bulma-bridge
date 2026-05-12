@@ -1,6 +1,6 @@
 {# Widgets #}
 
-{%- block form_widget -%}
+{% block form_widget %}
     {% if compound %}
         {{- block('form_widget_compound') -}}
     {% else %}
@@ -8,18 +8,16 @@
     {% endif %}
 {%- endblock form_widget -%}
 
-{%- block form_widget_simple -%}
-    <div class="control">
-        {%- set type = type|default('text') -%}
-        {%- if type == 'range' or type == 'color' -%}
-            {# Attribute "required" is not supported #}
-            {%- set required = false -%}
-        {%- endif -%}
-        <input type="{{ type }}" {{ block('widget_attributes') }} {% if value is not empty %}value="{{ value }}" {% endif %}/>
-    </div>
+{% block form_widget_simple %}
+    {%- set type = type|default('text') -%}
+    {%- if type == 'range' or type == 'color' -%}
+        {# Attribute "required" is not supported #}
+        {%- set required = false -%}
+    {%- endif -%}
+    <input type="{{ type }}" {{ block('widget_attributes') }} {% if value is not empty %}value="{{ value }}" {% endif %}/>
 {%- endblock form_widget_simple -%}
 
-{%- block form_widget_compound -%}
+{% block form_widget_compound %}
     <div {{ block('widget_container_attributes') }}>
         {%- if form is rootform -%}
             {{ form_errors(form) }}
@@ -29,18 +27,18 @@
     </div>
 {%- endblock form_widget_compound -%}
 
-{%- block collection_widget -%}
+{% block collection_widget %}
     {% if prototype is defined and not prototype.rendered %}
         {%- set attr = attr|merge({'data-prototype': form_row(prototype) }) -%}
     {% endif %}
     {{- block('form_widget') -}}
 {%- endblock collection_widget -%}
 
-{%- block textarea_widget -%}
+{% block textarea_widget %}
     <textarea {{ block('widget_attributes') }}>{{ value }}</textarea>
 {%- endblock textarea_widget -%}
 
-{%- block choice_widget -%}
+{% block choice_widget %}
     {% if expanded %}
         {{- block('choice_widget_expanded') -}}
     {% else %}
@@ -48,38 +46,45 @@
     {% endif %}
 {%- endblock choice_widget -%}
 
-{%- block choice_widget_expanded -%}
+{% block choice_widget_expanded %}
     <div {{ block('widget_container_attributes') }}>
-    {%- for child in form %}
-        {{- form_widget(child) -}}
-        {{- form_label(child, null, {translation_domain: choice_translation_domain}) -}}
-    {% endfor -%}
+        {%- for child in form %}
+            {{- form_widget(child) -}}
+            {{- form_label(child, null, {translation_domain: choice_translation_domain}) -}}
+        {% endfor -%}
     </div>
 {%- endblock choice_widget_expanded -%}
 
-{%- block choice_widget_collapsed -%}
+{% block choice_widget_collapsed %}
     {%- if required and placeholder is none and not placeholder_in_choices and not multiple and (attr.size is not defined or attr.size <= 1) -%}
         {% set required = false %}
     {%- endif -%}
-    <select {{ block('widget_attributes') }}{% if multiple %} multiple="multiple"{% endif %}>
-        {%- if placeholder is not none -%}
-            <option value=""{% if required and value is empty %} selected="selected"{% endif %}>{{ placeholder != '' ? (translation_domain is same as(false) ? placeholder : placeholder|trans({}, translation_domain)) }}</option>
-        {%- endif -%}
-        {%- if preferred_choices|length > 0 -%}
-            {% set options = preferred_choices %}
-            {% set render_preferred_choices = true %}
-            {{- block('choice_widget_options') -}}
-            {%- if choices|length > 0 and separator is not none -%}
-                <option disabled="disabled">{{ separator }}</option>
+    <div class="select is-fullwidth{{ multiple ? ' is-multiple' }} {{ attr.class|default('') }} {{ errors|length ? ' is-danger' }}">
+        {% set attr = attr | filter((v, k) => k != 'class') %}
+        <select {{ block('widget_attributes') }}{% if multiple %} multiple="multiple"{% endif %}>
+            {%- if placeholder is not none -%}
+                <option value=""{% if placeholder_attr|default({}) %}{% with { attr: placeholder_attr } %}{{ block('attributes') }}{% endwith %}{% endif %}{% if required and value is empty %} selected="selected"{% endif %}>{{ placeholder != '' ? (translation_domain is same as(false) ? placeholder : placeholder|trans({}, translation_domain)) }}</option>
             {%- endif -%}
-        {%- endif -%}
-        {%- set options = choices -%}
-        {%- set render_preferred_choices = false -%}
-        {{- block('choice_widget_options') -}}
-    </select>
+            {%- if preferred_choices|length > 0 -%}
+                {% set options = preferred_choices %}
+                {% set render_preferred_choices = true %}
+                {{- block('choice_widget_options') -}}
+                {%- if choices|length > 0 and separator is not none -%}
+                    {%- if separator_html is not defined or separator_html is same as(false) -%}
+                        <option disabled="disabled">{{ separator }}</option>
+                    {% else %}
+                        {{ separator|raw }}
+                    {% endif %}
+                {%- endif -%}
+            {%- endif -%}
+            {%- set options = choices -%}
+            {%- set render_preferred_choices = false -%}
+            {{- block('choice_widget_options') -}}
+        </select>
+    </div>
 {%- endblock choice_widget_collapsed -%}
 
-{%- block choice_widget_options -%}
+{% block choice_widget_options %}
     {% for group_label, choice in options %}
         {%- if choice is iterable -%}
             <optgroup label="{{ choice_translation_domain is same as(false) ? group_label : group_label|trans({}, choice_translation_domain) }}">
@@ -92,15 +97,21 @@
     {% endfor %}
 {%- endblock choice_widget_options -%}
 
-{%- block checkbox_widget -%}
-    <input type="checkbox" {{ block('widget_attributes') }}{% if value is defined %} value="{{ value }}"{% endif %}{% if checked %} checked="checked"{% endif %} />
+{% block checkbox_widget %}
+    <label class="checkbox">
+        <input type="checkbox" {{ block('widget_attributes') }}{% if value is defined %} value="{{ value }}"{% endif %}{% if checked %} checked="checked"{% endif %} />
+        {{ label|default('') }}
+    </label>
 {%- endblock checkbox_widget -%}
 
-{%- block radio_widget -%}
-    <input type="radio" {{ block('widget_attributes') }}{% if value is defined %} value="{{ value }}"{% endif %}{% if checked %} checked="checked"{% endif %} />
+{% block radio_widget %}
+    <label class="radio">
+        <input type="radio" {{ block('widget_attributes') }}{% if value is defined %} value="{{ value }}"{% endif %}{% if checked %} checked="checked"{% endif %} />
+        {{ label|default('') }}
+    </label>
 {%- endblock radio_widget -%}
 
-{%- block datetime_widget -%}
+{% block datetime_widget %}
     {% if widget == 'single_text' %}
         {{- block('form_widget_simple') -}}
     {%- else -%}
@@ -113,7 +124,7 @@
     {%- endif -%}
 {%- endblock datetime_widget -%}
 
-{%- block date_widget -%}
+{% block date_widget %}
     {%- if widget == 'single_text' -%}
         {{ block('form_widget_simple') }}
     {%- else -%}
@@ -127,7 +138,7 @@
     {%- endif -%}
 {%- endblock date_widget -%}
 
-{%- block time_widget -%}
+{% block time_widget %}
     {%- if widget == 'single_text' -%}
         {{ block('form_widget_simple') }}
     {%- else -%}
@@ -138,34 +149,34 @@
     {%- endif -%}
 {%- endblock time_widget -%}
 
-{%- block dateinterval_widget -%}
+{% block dateinterval_widget %}
     {%- if widget == 'single_text' -%}
         {{- block('form_widget_simple') -}}
     {%- else -%}
         <div {{ block('widget_container_attributes') }}>
             {{- form_errors(form) -}}
-            <table class="{{ table_class|default('') }}" role="presentation">
+            <table class="{{ table_class|default('table is-bordered') }}" role="presentation">
                 <thead>
-                    <tr>
-                        {%- if with_years %}<th>{{ form_label(form.years) }}</th>{% endif -%}
-                        {%- if with_months %}<th>{{ form_label(form.months) }}</th>{% endif -%}
-                        {%- if with_weeks %}<th>{{ form_label(form.weeks) }}</th>{% endif -%}
-                        {%- if with_days %}<th>{{ form_label(form.days) }}</th>{% endif -%}
-                        {%- if with_hours %}<th>{{ form_label(form.hours) }}</th>{% endif -%}
-                        {%- if with_minutes %}<th>{{ form_label(form.minutes) }}</th>{% endif -%}
-                        {%- if with_seconds %}<th>{{ form_label(form.seconds) }}</th>{% endif -%}
-                    </tr>
+                <tr>
+                    {%- if with_years %}<th>{{ form_label(form.years) }}</th>{% endif -%}
+                    {%- if with_months %}<th>{{ form_label(form.months) }}</th>{% endif -%}
+                    {%- if with_weeks %}<th>{{ form_label(form.weeks) }}</th>{% endif -%}
+                    {%- if with_days %}<th>{{ form_label(form.days) }}</th>{% endif -%}
+                    {%- if with_hours %}<th>{{ form_label(form.hours) }}</th>{% endif -%}
+                    {%- if with_minutes %}<th>{{ form_label(form.minutes) }}</th>{% endif -%}
+                    {%- if with_seconds %}<th>{{ form_label(form.seconds) }}</th>{% endif -%}
+                </tr>
                 </thead>
                 <tbody>
-                    <tr>
-                        {%- if with_years %}<td>{{ form_widget(form.years) }}</td>{% endif -%}
-                        {%- if with_months %}<td>{{ form_widget(form.months) }}</td>{% endif -%}
-                        {%- if with_weeks %}<td>{{ form_widget(form.weeks) }}</td>{% endif -%}
-                        {%- if with_days %}<td>{{ form_widget(form.days) }}</td>{% endif -%}
-                        {%- if with_hours %}<td>{{ form_widget(form.hours) }}</td>{% endif -%}
-                        {%- if with_minutes %}<td>{{ form_widget(form.minutes) }}</td>{% endif -%}
-                        {%- if with_seconds %}<td>{{ form_widget(form.seconds) }}</td>{% endif -%}
-                    </tr>
+                <tr>
+                    {%- if with_years %}<td>{{ form_widget(form.years) }}</td>{% endif -%}
+                    {%- if with_months %}<td>{{ form_widget(form.months) }}</td>{% endif -%}
+                    {%- if with_weeks %}<td>{{ form_widget(form.weeks) }}</td>{% endif -%}
+                    {%- if with_days %}<td>{{ form_widget(form.days) }}</td>{% endif -%}
+                    {%- if with_hours %}<td>{{ form_widget(form.hours) }}</td>{% endif -%}
+                    {%- if with_minutes %}<td>{{ form_widget(form.minutes) }}</td>{% endif -%}
+                    {%- if with_seconds %}<td>{{ form_widget(form.seconds) }}</td>{% endif -%}
+                </tr>
                 </tbody>
             </table>
             {%- if with_invert %}{{ form_widget(form.invert) }}{% endif -%}
@@ -173,57 +184,57 @@
     {%- endif -%}
 {%- endblock dateinterval_widget -%}
 
-{%- block number_widget -%}
+{% block number_widget %}
     {# type="number" doesn't work with floats in localized formats #}
     {%- set type = type|default('text') -%}
     {{ block('form_widget_simple') }}
 {%- endblock number_widget -%}
 
-{%- block integer_widget -%}
+{% block integer_widget %}
     {%- set type = type|default('number') -%}
     {{ block('form_widget_simple') }}
 {%- endblock integer_widget -%}
 
-{%- block money_widget -%}
+{% block money_widget %}
     {{ money_pattern|form_encode_currency(block('form_widget_simple')) }}
 {%- endblock money_widget -%}
 
-{%- block url_widget -%}
+{% block url_widget %}
     {%- set type = type|default('url') -%}
     {{ block('form_widget_simple') }}
 {%- endblock url_widget -%}
 
-{%- block search_widget -%}
+{% block search_widget %}
     {%- set type = type|default('search') -%}
     {{ block('form_widget_simple') }}
 {%- endblock search_widget -%}
 
-{%- block percent_widget -%}
+{% block percent_widget %}
     {%- set type = type|default('text') -%}
     {{ block('form_widget_simple') }}{% if symbol %} {{ symbol|default('%') }}{% endif %}
 {%- endblock percent_widget -%}
 
-{%- block password_widget -%}
+{% block password_widget %}
     {%- set type = type|default('password') -%}
     {{ block('form_widget_simple') }}
 {%- endblock password_widget -%}
 
-{%- block hidden_widget -%}
+{% block hidden_widget %}
     {%- set type = type|default('hidden') -%}
     {{ block('form_widget_simple') }}
 {%- endblock hidden_widget -%}
 
-{%- block email_widget -%}
+{% block email_widget %}
     {%- set type = type|default('email') -%}
     {{ block('form_widget_simple') }}
 {%- endblock email_widget -%}
 
-{%- block range_widget -%}
+{% block range_widget %}
     {% set type = type|default('range') %}
     {{- block('form_widget_simple') -}}
 {%- endblock range_widget %}
 
-{%- block button_widget -%}
+{% block button_widget %}
     {%- if label is empty -%}
         {%- if label_format is not empty -%}
             {% set label = label_format|replace({
@@ -234,7 +245,7 @@
             {% set label = name|humanize %}
         {%- endif -%}
     {%- endif -%}
-    <button type="{{ type|default('button') }}" {{ block('button_attributes') }}>
+    <button type="{{ type|default('button') }}" {{ block('button_attributes') }} class="button">
         {%- if translation_domain is same as(false) -%}
             {%- if label_html is same as(false) -%}
                 {{- label -}}
@@ -251,27 +262,27 @@
     </button>
 {%- endblock button_widget -%}
 
-{%- block submit_widget -%}
+{% block submit_widget %}
     {%- set type = type|default('submit') -%}
     {{ block('button_widget') }}
 {%- endblock submit_widget -%}
 
-{%- block reset_widget -%}
+{% block reset_widget %}
     {%- set type = type|default('reset') -%}
     {{ block('button_widget') }}
 {%- endblock reset_widget -%}
 
-{%- block tel_widget -%}
+{% block tel_widget %}
     {%- set type = type|default('tel') -%}
     {{ block('form_widget_simple') }}
 {%- endblock tel_widget -%}
 
-{%- block color_widget -%}
+{% block color_widget %}
     {%- set type = type|default('color') -%}
     {{ block('form_widget_simple') }}
 {%- endblock color_widget -%}
 
-{%- block week_widget -%}
+{% block week_widget %}
     {%- if widget == 'single_text' -%}
         {{ block('form_widget_simple') }}
     {%- else -%}
@@ -282,9 +293,86 @@
     {%- endif -%}
 {%- endblock week_widget -%}
 
+{% block text_group_widget %}
+    {% if label_left is not defined %}
+        {% set label_left = attribute(form.vars, constant('App\\Form\\TextGroupType::LABEL_LEFT')) %}
+    {% endif %}
+    {% if label_right is not defined %}
+        {% set label_right = attribute(form.vars, constant('App\\Form\\TextGroupType::LABEL_RIGHT')) %}
+    {% endif %}
+    {% if class_left is not defined %}
+        {% set class_left = attribute(form.vars, constant('App\\Form\\TextGroupType::CLASS_LEFT')) %}
+    {% endif %}
+    {% if class_right is not defined %}
+        {% set class_right = attribute(form.vars, constant('App\\Form\\TextGroupType::CLASS_RIGHT')) %}
+    {% endif %}
+    {% if label_left is not null or label_right is not null %}
+        <div class="control{{ label_left is not null ? ' has-icons-left' }}{{ label_right is not null ? ' has-icons-right' }}">
+            {{ block('form_widget_simple') }}
+            {% if label_left is not null %}
+                <span class="icon is-small is-left {{ class_left }}">{{ label_left | raw }}</span>
+            {% endif %}
+            {% if label_right is not null %}
+                <span class="icon is-small is-right {{ class_right }}">{{ label_right | raw }}</span>
+            {% endif %}
+        </div>
+    {% else %}
+        {{ block('form_widget_simple') }}
+    {% endif %}
+{% endblock text_group_widget %}
+
+{% block password_group_widget %}
+    {% if label_left is not defined %}
+        {% set label_left = attribute(form.vars, constant('App\\Extension\\Form\\PasswordGroupType::LABEL_LEFT')) %}
+    {% endif %}
+    {% if label_right is not defined %}
+        {% set label_right = attribute(form.vars, constant('App\\Extension\\Form\\PasswordGroupType::LABEL_RIGHT')) %}
+    {% endif %}
+    {% if class_left is not defined %}
+        {% set class_left = attribute(form.vars, constant('App\\Extension\\Form\\PasswordGroupType::CLASS_LEFT')) %}
+    {% endif %}
+    {% if class_right is not defined %}
+        {% set class_right = attribute(form.vars, constant('App\\Extension\\Form\\PasswordGroupType::CLASS_RIGHT')) %}
+    {% endif %}
+    {% set attr = attr|merge({type: 'password'}) -%}
+    {% if label_left is not null or label_right is not null %}
+        <div class="control{{ label_left is not null ? ' has-icons-left' }}{{ label_right is not null ? ' has-icons-right' }}">
+            {{ block('password_widget') }}
+            {% if label_left is not null %}
+                <span class="icon is-small is-left {{ class_left }}">{{ label_left | raw }}</span>
+            {% endif %}
+            {% if label_right is not null %}
+                <span class="icon is-small is-right {{ class_right }}">{{ label_right | raw }}</span>
+            {% endif %}
+        </div>
+    {% else %}
+        {{ block('password_widget') }}
+    {% endif %}
+{% endblock password_group_widget %}
+
+{% block select2_widget %}
+    {{ block('choice_widget') }}
+    {{ attribute(form.vars.attr, constant('Cadrien\\BulmaBridge\\Form\\Select2Type::VIEW_ATTR_SCRIPT'))|raw }}
+{% endblock select2_widget %}
+
+{% block wysiwyg_quill_widget %}
+    {% set disabled = form.vars.disabled|default(false) %}
+    {% if not disabled %}
+        <div id="{{ attribute(form.vars.attr, constant('Cadrien\\BulmaBridge\\Form\\WysiwygQuillType::VIEW_ATTR_DIV_ID')) }}" class="has-background-white" style="height: {{ attribute(form.vars.attr, constant('Cadrien\\BulmaBridge\\Form\\WysiwygQuillType::OPTION_HEIGHT')) }}">
+            {{ form.vars.data|raw }}
+        </div>
+        <div style="display: none !important;">
+            {{ form_widget(form) }}
+        </div>
+        {{ attribute(form.vars.attr, constant('Cadrien\\BulmaBridge\\Form\\WysiwygQuillType::VIEW_ATTR_SCRIPT'))|default('')|raw }}
+    {% else %}
+        {{ form_widget(form) }}
+    {% endif %}
+{% endblock wysiwyg_quill_widget %}
+
 {# Labels #}
 
-{%- block form_label -%}
+{% block form_label %}
     {% if label is not same as(false) -%}
         {% if not compound -%}
             {% set label_attr = label_attr|merge({'for': id}) %}
@@ -292,62 +380,70 @@
         {% if required -%}
             {% set label_attr = label_attr|merge({'class': (label_attr.class|default('') ~ ' required')|trim}) %}
         {%- endif -%}
-        {% if label is empty -%}
-            {%- if label_format is not empty -%}
-                {% set label = label_format|replace({
-                    '%name%': name,
-                    '%id%': id,
-                }) %}
-            {%- else -%}
-                {% set label = name|humanize %}
-            {%- endif -%}
-        {%- endif -%}
         <{{ element|default('label') }}{% if label_attr %}{% with { attr: label_attr } %}{{ block('attributes') }}{% endwith %}{% endif %}>
-            {%- if translation_domain is same as(false) -%}
-                {%- if label_html is same as(false) -%}
-                    {{- label -}}
-                {%- else -%}
-                    {{- label|raw -}}
-                {%- endif -%}
-            {%- else -%}
-                {%- if label_html is same as(false) -%}
-                    {{- label|trans(label_translation_parameters, translation_domain) -}}
-                {%- else -%}
-                    {{- label|trans(label_translation_parameters, translation_domain)|raw -}}
-                {%- endif -%}
-            {%- endif -%}
+        {{- block('form_label_content') -}}
         </{{ element|default('label') }}>
     {%- endif -%}
 {%- endblock form_label -%}
 
-{%- block button_label -%}{%- endblock -%}
+{% block form_label_content %}
+    {%- if label is empty -%}
+        {%- if label_format is not empty -%}
+            {% set label = label_format|replace({
+                '%name%': name,
+                '%id%': id,
+            }) %}
+        {%- else -%}
+            {% set label = name|humanize %}
+        {%- endif -%}
+    {%- endif -%}
+    {%- if translation_domain is same as(false) -%}
+        {%- if label_html is same as(false) -%}
+            {{- label -}}
+        {%- else -%}
+            {{- label|raw -}}
+        {%- endif -%}
+    {%- else -%}
+        {%- if label_html is same as(false) -%}
+            {{- label|trans(label_translation_parameters, translation_domain) -}}
+        {%- else -%}
+            {{- label|trans(label_translation_parameters, translation_domain)|raw -}}
+        {%- endif -%}
+    {%- endif -%}
+{%- endblock form_label_content -%}
+
+{% block button_label %}{%- endblock -%}
 
 {# Help #}
 
-{% block form_help -%}
+{% block form_help %}
     {%- if help is not empty -%}
-        {%- set help_attr = help_attr|merge({class: (help_attr.class|default('') ~ ' help-text')|trim}) -%}
-        <p id="{{ id }}_help"{% with { attr: help_attr } %}{{ block('attributes') }}{% endwith %}>
-            {%- if translation_domain is same as(false) -%}
-                {%- if help_html is same as(false) -%}
-                    {{- help -}}
-                {%- else -%}
-                    {{- help|raw -}}
-                {%- endif -%}
-            {%- else -%}
-                {%- if help_html is same as(false) -%}
-                    {{- help|trans(help_translation_parameters, translation_domain) -}}
-                {%- else -%}
-                    {{- help|trans(help_translation_parameters, translation_domain)|raw -}}
-                {%- endif -%}
-            {%- endif -%}
-        </p>
+        {%- set help_attr = help_attr|merge({class: (help_attr.class|default('') ~ ' help')|trim}) -%}
+        <{{ element|default('div') }} id="{{ id }}_help"{% with { attr: help_attr } %}{{ block('attributes') }}{% endwith %}>
+        {{- block('form_help_content') -}}
+        </{{ element|default('div') }}>
     {%- endif -%}
 {%- endblock form_help %}
 
+{% block form_help_content %}
+    {%- if translation_domain is same as(false) -%}
+        {%- if help_html is same as(false) -%}
+            {{- help -}}
+        {%- else -%}
+            {{- help|raw -}}
+        {%- endif -%}
+    {%- else -%}
+        {%- if help_html is same as(false) -%}
+            {{- help|trans(help_translation_parameters, translation_domain) -}}
+        {%- else -%}
+            {{- help|trans(help_translation_parameters, translation_domain)|raw -}}
+        {%- endif -%}
+    {%- endif -%}
+{%- endblock form_help_content %}
+
 {# Rows #}
 
-{%- block repeated_row -%}
+{% block repeated_row %}
     {#
     No need to render the errors here, as all errors are mapped
     to the first child (see RepeatedTypeValidatorExtension).
@@ -355,38 +451,38 @@
     {{- block('form_rows') -}}
 {%- endblock repeated_row -%}
 
-{%- block form_row -%}
+{% block form_row %}
     {%- set widget_attr = {} -%}
     {%- if help is not empty -%}
         {%- set widget_attr = {attr: {'aria-describedby': id ~"_help"}} -%}
     {%- endif -%}
-    <div{% with {attr: row_attr} %}{{ block('attributes') }}{% endwith %}>
-        {{- form_label(form) -}}
-        {{- form_errors(form) -}}
-        {{- form_widget(form, widget_attr) -}}
-        {{- form_help(form) -}}
+    <div{% with {attr: row_attr} %}{{ block('attributes') }}{% endwith %}}>
+    {{- form_label(form) -}}
+    {{- form_errors(form) -}}
+    {{- form_widget(form, widget_attr) -}}
+    {{- form_help(form) -}}
     </div>
 {%- endblock form_row -%}
 
-{%- block button_row -%}
-    <div{% with {attr: row_attr} %}{{ block('attributes') }}{% endwith %}>
-        {{- form_widget(form) -}}
+{% block button_row %}
+    <div{% with {attr: row_attr} %}{{ block('attributes') }}{% endwith %}}>
+    {{- form_widget(form) -}}
     </div>
 {%- endblock button_row -%}
 
-{%- block hidden_row -%}
+{% block hidden_row %}
     {{ form_widget(form) }}
 {%- endblock hidden_row -%}
 
 {# Misc #}
 
-{%- block form -%}
+{% block form %}
     {{ form_start(form) }}
-        {{- form_widget(form) -}}
+    {{- form_widget(form) -}}
     {{ form_end(form) }}
 {%- endblock form -%}
 
-{%- block form_start -%}
+{% block form_start %}
     {%- do form.setMethodRendered() -%}
     {% set method = method|upper %}
     {%- if method in ["GET", "POST"] -%}
@@ -394,30 +490,32 @@
     {%- else -%}
         {% set form_method = "POST" %}
     {%- endif -%}
-    <form{% if name != '' %} name="{{ name }}"{% endif %} method="{{ form_method|lower }}"{% if action != '' %} action="{{ action }}"{% endif %}{{ block('attributes') }}{% if multipart %} enctype="multipart/form-data"{% endif %}>
+<form{% if name != '' %} name="{{ name }}"{% endif %} method="{{ form_method|lower }}"{% if action != '' %} action="{{ action }}"{% endif %}{{ block('attributes') }}{% if multipart %} enctype="multipart/form-data"{% endif %}>
     {%- if form_method != method -%}
         <input type="hidden" name="_method" value="{{ method }}" />
     {%- endif -%}
-{%- endblock form_start -%}
+    {%- endblock form_start -%}
 
-{%- block form_end -%}
+    {% block form_end %}
     {%- if not render_rest is defined or render_rest -%}
         {{ form_rest(form) }}
     {%- endif -%}
-    </form>
+</form>
 {%- endblock form_end -%}
 
-{%- block form_errors -%}
+{% block form_errors %}
     {%- if errors|length > 0 -%}
-    <ul>
-        {%- for error in errors -%}
-            <li>{{ error.message }}</li>
-        {%- endfor -%}
-    </ul>
+        <div class="notification is-danger">
+            <ul>
+                {%- for error in errors -%}
+                    <li>{{ error.message }}</li>
+                {%- endfor -%}
+            </ul>
+        </div>
     {%- endif -%}
 {%- endblock form_errors -%}
 
-{%- block form_rest -%}
+{% block form_rest %}
     {% for child in form -%}
         {% if not child.rendered %}
             {{- form_row(child) -}}
@@ -441,30 +539,30 @@
 
 {# Support #}
 
-{%- block form_rows -%}
+{% block form_rows %}
     {% for child in form|filter(child => not child.rendered) %}
         {{- form_row(child) -}}
     {% endfor %}
 {%- endblock form_rows -%}
 
-{%- block widget_attributes -%}
+{% block widget_attributes %}
     id="{{ id }}" name="{{ full_name }}"
     {%- if disabled %} disabled="disabled"{% endif -%}
     {%- if required %} required="required"{% endif -%}
     {{ block('attributes') }}
 {%- endblock widget_attributes -%}
 
-{%- block widget_container_attributes -%}
+{% block widget_container_attributes %}
     {%- if id is not empty %}id="{{ id }}"{% endif -%}
     {{ block('attributes') }}
 {%- endblock widget_container_attributes -%}
 
-{%- block button_attributes -%}
+{% block button_attributes %}
     id="{{ id }}" name="{{ full_name }}"{% if disabled %} disabled="disabled"{% endif -%}
     {{ block('attributes') }}
 {%- endblock button_attributes -%}
 
-{% block attributes -%}
+{% block attributes %}
     {%- for attrname, attrvalue in attr -%}
         {{- " " -}}
         {%- if attrname in ['placeholder', 'title'] -%}

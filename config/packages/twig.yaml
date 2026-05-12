@@ -1,0 +1,9 @@
+twig:
+    file_name_pattern: '*.twig'
+    paths:
+        -
+    form_themes: [ 'Resources/views/form/bulma_1_layout.html.twig']
+
+when@test:
+    twig:
+        strict_variables: true
