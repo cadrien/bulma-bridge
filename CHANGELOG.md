@@ -13,6 +13,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   `require` to `suggest` (with `require-dev` for the demo app). Projects that
   use `WysiwygQuillType` must now declare `ehyiah/ux-quill` themselves, or
   load Quill via CDN.
+- **BREAKING**: minimum Symfony version bumped from `^7.2` to `^7.4` (LTS).
+  Projects pinned to Symfony 7.2 or 7.3 must upgrade to 7.4 (or 8.0) to use
+  this release.
 
 ### Fixed
 
@@ -31,3 +34,6 @@ dependency explicitly:
 
 If you don't use `WysiwygQuillType`, no action required — you just stop
 pulling a transitive dependency you didn't need.
+
+Ensure your project runs on Symfony 7.4 (LTS) or later. Symfony 7.2 and 7.3
+are no longer supported by this package.
