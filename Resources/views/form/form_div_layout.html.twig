@@ -14,7 +14,7 @@
         {# Attribute "required" is not supported #}
         {%- set required = false -%}
     {%- endif -%}
-    <input type="{{ type }}" {{ block('widget_attributes') }} {% if value is not empty %}value="{{ value }}" {% endif %} class="input" />
+    <input type="{{ type }}" {{ block('widget_attributes') }} {% if value is not empty %}value="{{ value }}" {% endif %}/>
 {%- endblock form_widget_simple -%}
 
 {% block form_widget_compound %}
@@ -35,7 +35,7 @@
 {%- endblock collection_widget -%}
 
 {% block textarea_widget %}
-    <textarea {{ block('widget_attributes') }} class="textarea">{{ value }}</textarea>
+    <textarea {{ block('widget_attributes') }}>{{ value }}</textarea>
 {%- endblock textarea_widget -%}
 
 {% block choice_widget %}

@@ -16,17 +16,19 @@
         "php": ">=8.2",
         "ext-ctype": "*",
         "ext-iconv": "*",
-        "ehyiah/ux-quill": "^2.0",
         "phpdocumentor/reflection-docblock": "^5.6",
         "symfony/flex": "^2.4",
-        "symfony/form": "^7.2|^8.0",
-        "symfony/framework-bundle": "^7.2|^8.0",
-        "symfony/intl": "^7.2|^8.0",
-        "symfony/runtime": "^7.2|^8.0",
-        "symfony/twig-bundle": "^7.2|^8.0",
-        "symfony/yaml": "^7.2|^8.0",
+        "symfony/form": "^7.4|^8.0",
+        "symfony/framework-bundle": "^7.4|^8.0",
+        "symfony/intl": "^7.4|^8.0",
+        "symfony/runtime": "^7.4|^8.0",
+        "symfony/twig-bundle": "^7.4|^8.0",
+        "symfony/yaml": "^7.4|^8.0",
         "twig/extra-bundle": "^2.12|^3.0",
         "twig/twig": "^2.12|^3.0"
+    },
+    "suggest": {
+        "ehyiah/ux-quill": "Required only if you use WysiwygQuillType with the Symfony UX Quill integration (^2.0). Alternatively, load Quill via CDN."
     },
     "config": {
         "allow-plugins": {
@@ -64,13 +66,14 @@
     "extra": {
         "symfony": {
             "allow-contrib": false,
-            "require": "^7.2|^8.0"
+            "require": "^7.4|^8.0"
         }
     },
     "require-dev": {
-        "symfony/browser-kit": "^7.2|^8.0",
-        "symfony/css-selector": "^7.2|^8.0",
-        "symfony/debug-bundle": "^7.2|^8.0",
-        "symfony/stopwatch": "^7.2|^8.0"
+        "ehyiah/ux-quill": "^2.0",
+        "symfony/browser-kit": "^7.4|^8.0",
+        "symfony/css-selector": "^7.4|^8.0",
+        "symfony/debug-bundle": "^7.4|^8.0",
+        "symfony/stopwatch": "^7.4|^8.0"
     }
 }
