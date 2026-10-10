@@ -364,7 +364,8 @@
 
 {%- block form_help -%}
     {%- set row_class = row_attr.class|default('') -%}
-    {%- set help_class = ' help' -%}
+    {#- No ' help' here: the parent block adds it to every help text. -#}
+    {%- set help_class = '' -%}
     {%- if 'control' in row_class -%}
         {#- Hack to properly display help with control group -#}
         {%- set help_class = ' control-help' -%}
