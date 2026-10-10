@@ -343,7 +343,6 @@
     {% if class_right is not defined %}
         {% set class_right = attribute(form.vars, constant('App\\Extension\\Form\\PasswordGroupType::CLASS_RIGHT')) %}
     {% endif %}
-    {% set attr = attr|merge({type: 'password'}) -%}
     {% if label_left is not null or label_right is not null %}
         <div class="control{{ label_left is not null ? ' has-icons-left' }}{{ label_right is not null ? ' has-icons-right' }}">
             {{ block('password_widget') }}
