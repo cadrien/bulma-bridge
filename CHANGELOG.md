@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [2.0.1] - 2026-10-10
 
+### Added
+
+- `NOTICE` reproduces the MIT notice of the Symfony Twig bridge themes these
+  form themes are derived from, and each theme points to it.
+
 ### Fixed
 
 - Checkbox and radio labels are now translated. Bulma renders the text inside
@@ -15,6 +20,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   same language on every locale. The label now follows the same rules as any
   other label (`translation_domain`, `label_translation_parameters`,
   `label_html`). An empty or `false` label still renders no text.
+- `WysiwygQuillType` synced the textarea from the editor container, saving the
+  editor wrapper and the snow theme tooltip along with the content. It now
+  saves `quill.root.innerHTML`.
+- `Select2Type` and `WysiwygQuillType` printed their script (and, for Quill,
+  the editor id and height) as attributes of the `<select>` or `<textarea>`.
+- `PasswordGroupType` rendered `type="password"` twice on the same input.
+- The fallbacks of `text_group_widget` and `password_group_widget` referenced
+  classes outside the bridge namespace, which would fail if ever reached.
+- Help texts rendered `class="help mb-0 help"`.
+
+### Security
+
+- `WysiwygQuillType` no longer prints the field value as raw HTML in the
+  editor. Any markup it held ran in the page: reflected when a submitted form
+  is shown again after a validation or CSRF error, stored when editing saved
+  content. The script now loads the value through `quill.clipboard.convert()`,
+  which keeps only the formats Quill knows. This uses the Quill 2 API.
 
 ## [2.0.0] - 2026-05-12
 
