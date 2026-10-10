@@ -5,6 +5,17 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.0.1] - 2026-10-10
+
+### Fixed
+
+- Checkbox and radio labels are now translated. Bulma renders the text inside
+  the widget's `<label>`, so it never went through `form_label` and was
+  printed as is: a translation key showed up raw, and a literal stayed in the
+  same language on every locale. The label now follows the same rules as any
+  other label (`translation_domain`, `label_translation_parameters`,
+  `label_html`). An empty or `false` label still renders no text.
+
 ## [2.0.0] - 2026-05-12
 
 ### Changed

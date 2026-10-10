@@ -100,16 +100,25 @@
 {% block checkbox_widget %}
     <label class="checkbox">
         <input type="checkbox" {{ block('widget_attributes') }}{% if value is defined %} value="{{ value }}"{% endif %}{% if checked %} checked="checked"{% endif %} />
-        {{ label|default('') }}
+        {{ block('checkbox_radio_label_content') }}
     </label>
 {%- endblock checkbox_widget -%}
 
 {% block radio_widget %}
     <label class="radio">
         <input type="radio" {{ block('widget_attributes') }}{% if value is defined %} value="{{ value }}"{% endif %}{% if checked %} checked="checked"{% endif %} />
-        {{ label|default('') }}
+        {{ block('checkbox_radio_label_content') }}
     </label>
 {%- endblock radio_widget -%}
+
+{#- Bulma puts the text inside the widget's <label>, so it never goes through
+    form_label: translate it here the same way. An empty label stays empty
+    (no humanized field name), as before. -#}
+{%- block checkbox_radio_label_content -%}
+    {%- if label is not same as(false) and label is not empty -%}
+        {{- block('form_label_content') -}}
+    {%- endif -%}
+{%- endblock checkbox_radio_label_content -%}
 
 {% block datetime_widget %}
     {% if widget == 'single_text' %}
