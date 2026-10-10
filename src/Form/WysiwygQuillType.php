@@ -65,8 +65,14 @@ class WysiwygQuillType extends AbstractType
                         let quill = new Quill(quillElement, {
                             theme: "snow"
                         });
-                        quill.on("text-change", (delta, oldDelta, source) => {
-                            textareaElement.value = quillElement.innerHTML;
+                        // Quill 2 parses this HTML in an inert document and keeps
+                        // only the formats it knows: event handlers and scripts
+                        // never reach the page.
+                        quill.setContents(quill.clipboard.convert({ html: textareaElement.value }), "silent");
+                        // quill.root is the editable area; the container also
+                        // holds the toolbar tooltip and editor wrapper.
+                        quill.on("text-change", () => {
+                            textareaElement.value = quill.root.innerHTML;
                         });
                     }
                 });

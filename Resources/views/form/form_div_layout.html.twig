@@ -1,3 +1,5 @@
+{# Derived from Symfony's form_div_layout.html.twig (symfony/twig-bridge),
+   Copyright (c) 2004-present Fabien Potencier, MIT License: see NOTICE. #}
 {# Widgets #}
 
 {% block form_widget %}
@@ -100,16 +102,25 @@
 {% block checkbox_widget %}
     <label class="checkbox">
         <input type="checkbox" {{ block('widget_attributes') }}{% if value is defined %} value="{{ value }}"{% endif %}{% if checked %} checked="checked"{% endif %} />
-        {{ label|default('') }}
+        {{ block('checkbox_radio_label_content') }}
     </label>
 {%- endblock checkbox_widget -%}
 
 {% block radio_widget %}
     <label class="radio">
         <input type="radio" {{ block('widget_attributes') }}{% if value is defined %} value="{{ value }}"{% endif %}{% if checked %} checked="checked"{% endif %} />
-        {{ label|default('') }}
+        {{ block('checkbox_radio_label_content') }}
     </label>
 {%- endblock radio_widget -%}
+
+{#- Bulma puts the text inside the widget's <label>, so it never goes through
+    form_label: translate it here the same way. An empty label stays empty
+    (no humanized field name), as before. -#}
+{%- block checkbox_radio_label_content -%}
+    {%- if label is not same as(false) and label is not empty -%}
+        {{- block('form_label_content') -}}
+    {%- endif -%}
+{%- endblock checkbox_radio_label_content -%}
 
 {% block datetime_widget %}
     {% if widget == 'single_text' %}
@@ -295,16 +306,16 @@
 
 {% block text_group_widget %}
     {% if label_left is not defined %}
-        {% set label_left = attribute(form.vars, constant('App\\Form\\TextGroupType::LABEL_LEFT')) %}
+        {% set label_left = attribute(form.vars, constant('Cadrien\\BulmaBridge\\Form\\TextGroupType::LABEL_LEFT')) %}
     {% endif %}
     {% if label_right is not defined %}
-        {% set label_right = attribute(form.vars, constant('App\\Form\\TextGroupType::LABEL_RIGHT')) %}
+        {% set label_right = attribute(form.vars, constant('Cadrien\\BulmaBridge\\Form\\TextGroupType::LABEL_RIGHT')) %}
     {% endif %}
     {% if class_left is not defined %}
-        {% set class_left = attribute(form.vars, constant('App\\Form\\TextGroupType::CLASS_LEFT')) %}
+        {% set class_left = attribute(form.vars, constant('Cadrien\\BulmaBridge\\Form\\TextGroupType::CLASS_LEFT')) %}
     {% endif %}
     {% if class_right is not defined %}
-        {% set class_right = attribute(form.vars, constant('App\\Form\\TextGroupType::CLASS_RIGHT')) %}
+        {% set class_right = attribute(form.vars, constant('Cadrien\\BulmaBridge\\Form\\TextGroupType::CLASS_RIGHT')) %}
     {% endif %}
     {% if label_left is not null or label_right is not null %}
         <div class="control{{ label_left is not null ? ' has-icons-left' }}{{ label_right is not null ? ' has-icons-right' }}">
@@ -323,18 +334,17 @@
 
 {% block password_group_widget %}
     {% if label_left is not defined %}
-        {% set label_left = attribute(form.vars, constant('App\\Extension\\Form\\PasswordGroupType::LABEL_LEFT')) %}
+        {% set label_left = attribute(form.vars, constant('Cadrien\\BulmaBridge\\Form\\PasswordGroupType::LABEL_LEFT')) %}
     {% endif %}
     {% if label_right is not defined %}
-        {% set label_right = attribute(form.vars, constant('App\\Extension\\Form\\PasswordGroupType::LABEL_RIGHT')) %}
+        {% set label_right = attribute(form.vars, constant('Cadrien\\BulmaBridge\\Form\\PasswordGroupType::LABEL_RIGHT')) %}
     {% endif %}
     {% if class_left is not defined %}
-        {% set class_left = attribute(form.vars, constant('App\\Extension\\Form\\PasswordGroupType::CLASS_LEFT')) %}
+        {% set class_left = attribute(form.vars, constant('Cadrien\\BulmaBridge\\Form\\PasswordGroupType::CLASS_LEFT')) %}
     {% endif %}
     {% if class_right is not defined %}
-        {% set class_right = attribute(form.vars, constant('App\\Extension\\Form\\PasswordGroupType::CLASS_RIGHT')) %}
+        {% set class_right = attribute(form.vars, constant('Cadrien\\BulmaBridge\\Form\\PasswordGroupType::CLASS_RIGHT')) %}
     {% endif %}
-    {% set attr = attr|merge({type: 'password'}) -%}
     {% if label_left is not null or label_right is not null %}
         <div class="control{{ label_left is not null ? ' has-icons-left' }}{{ label_right is not null ? ' has-icons-right' }}">
             {{ block('password_widget') }}
@@ -351,6 +361,9 @@
 {% endblock password_group_widget %}
 
 {% block select2_widget %}
+    {#- The type passes its script through attr: printed below, not as an
+        attribute of the <select>. -#}
+    {% set attr = attr|filter((value, key) => key != constant('Cadrien\\BulmaBridge\\Form\\Select2Type::VIEW_ATTR_SCRIPT')) %}
     {{ block('choice_widget') }}
     {{ attribute(form.vars.attr, constant('Cadrien\\BulmaBridge\\Form\\Select2Type::VIEW_ATTR_SCRIPT'))|raw }}
 {% endblock select2_widget %}
@@ -358,11 +371,20 @@
 {% block wysiwyg_quill_widget %}
     {% set disabled = form.vars.disabled|default(false) %}
     {% if not disabled %}
-        <div id="{{ attribute(form.vars.attr, constant('Cadrien\\BulmaBridge\\Form\\WysiwygQuillType::VIEW_ATTR_DIV_ID')) }}" class="has-background-white" style="height: {{ attribute(form.vars.attr, constant('Cadrien\\BulmaBridge\\Form\\WysiwygQuillType::OPTION_HEIGHT')) }}">
-            {{ form.vars.data|raw }}
-        </div>
+        {#- Left empty on purpose: the script loads the textarea's value through
+            Quill, which keeps only the formats it knows. Printing the value here
+            raw would run any markup it holds (XSS). -#}
+        <div id="{{ attribute(form.vars.attr, constant('Cadrien\\BulmaBridge\\Form\\WysiwygQuillType::VIEW_ATTR_DIV_ID')) }}" class="has-background-white" style="height: {{ attribute(form.vars.attr, constant('Cadrien\\BulmaBridge\\Form\\WysiwygQuillType::OPTION_HEIGHT')) }}"></div>
         <div style="display: none !important;">
-            {{ form_widget(form) }}
+            {#- Script, editor id and height travel through attr for this
+                template only: they are not attributes of the <textarea>.
+                The renderer merges a passed attr into the current one, so
+                they are switched off (false is never printed), not removed. -#}
+            {{ form_widget(form, {attr: {
+                (constant('Cadrien\\BulmaBridge\\Form\\WysiwygQuillType::VIEW_ATTR_SCRIPT')): false,
+                (constant('Cadrien\\BulmaBridge\\Form\\WysiwygQuillType::VIEW_ATTR_DIV_ID')): false,
+                (constant('Cadrien\\BulmaBridge\\Form\\WysiwygQuillType::OPTION_HEIGHT')): false,
+            }}) }}
         </div>
         {{ attribute(form.vars.attr, constant('Cadrien\\BulmaBridge\\Form\\WysiwygQuillType::VIEW_ATTR_SCRIPT'))|default('')|raw }}
     {% else %}
