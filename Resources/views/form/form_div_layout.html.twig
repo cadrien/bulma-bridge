@@ -360,6 +360,9 @@
 {% endblock password_group_widget %}
 
 {% block select2_widget %}
+    {#- The type passes its script through attr: printed below, not as an
+        attribute of the <select>. -#}
+    {% set attr = attr|filter((value, key) => key != constant('Cadrien\\BulmaBridge\\Form\\Select2Type::VIEW_ATTR_SCRIPT')) %}
     {{ block('choice_widget') }}
     {{ attribute(form.vars.attr, constant('Cadrien\\BulmaBridge\\Form\\Select2Type::VIEW_ATTR_SCRIPT'))|raw }}
 {% endblock select2_widget %}
@@ -372,7 +375,15 @@
             raw would run any markup it holds (XSS). -#}
         <div id="{{ attribute(form.vars.attr, constant('Cadrien\\BulmaBridge\\Form\\WysiwygQuillType::VIEW_ATTR_DIV_ID')) }}" class="has-background-white" style="height: {{ attribute(form.vars.attr, constant('Cadrien\\BulmaBridge\\Form\\WysiwygQuillType::OPTION_HEIGHT')) }}"></div>
         <div style="display: none !important;">
-            {{ form_widget(form) }}
+            {#- Script, editor id and height travel through attr for this
+                template only: they are not attributes of the <textarea>.
+                The renderer merges a passed attr into the current one, so
+                they are switched off (false is never printed), not removed. -#}
+            {{ form_widget(form, {attr: {
+                (constant('Cadrien\\BulmaBridge\\Form\\WysiwygQuillType::VIEW_ATTR_SCRIPT')): false,
+                (constant('Cadrien\\BulmaBridge\\Form\\WysiwygQuillType::VIEW_ATTR_DIV_ID')): false,
+                (constant('Cadrien\\BulmaBridge\\Form\\WysiwygQuillType::OPTION_HEIGHT')): false,
+            }}) }}
         </div>
         {{ attribute(form.vars.attr, constant('Cadrien\\BulmaBridge\\Form\\WysiwygQuillType::VIEW_ATTR_SCRIPT'))|default('')|raw }}
     {% else %}
