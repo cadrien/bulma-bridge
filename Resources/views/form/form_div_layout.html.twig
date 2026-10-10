@@ -367,9 +367,10 @@
 {% block wysiwyg_quill_widget %}
     {% set disabled = form.vars.disabled|default(false) %}
     {% if not disabled %}
-        <div id="{{ attribute(form.vars.attr, constant('Cadrien\\BulmaBridge\\Form\\WysiwygQuillType::VIEW_ATTR_DIV_ID')) }}" class="has-background-white" style="height: {{ attribute(form.vars.attr, constant('Cadrien\\BulmaBridge\\Form\\WysiwygQuillType::OPTION_HEIGHT')) }}">
-            {{ form.vars.data|raw }}
-        </div>
+        {#- Left empty on purpose: the script loads the textarea's value through
+            Quill, which keeps only the formats it knows. Printing the value here
+            raw would run any markup it holds (XSS). -#}
+        <div id="{{ attribute(form.vars.attr, constant('Cadrien\\BulmaBridge\\Form\\WysiwygQuillType::VIEW_ATTR_DIV_ID')) }}" class="has-background-white" style="height: {{ attribute(form.vars.attr, constant('Cadrien\\BulmaBridge\\Form\\WysiwygQuillType::OPTION_HEIGHT')) }}"></div>
         <div style="display: none !important;">
             {{ form_widget(form) }}
         </div>
